@@ -1,0 +1,77 @@
+<div class="row">
+  <div class="col-md-3">
+    <div class="card">
+      <div class="card-body">
+        <h1>Formulario</h1>
+        <form class="form" #blogForm="ngForm">
+          <div class="form-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter the title of blog"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter the author of blog"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter the url of blog"
+            />
+          </div>
+          <div>
+            <button class="btn btn-primary">save</button>
+            <button class="btn btn-secondary">clean</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>title</th>
+          <th>author</th>
+          <th>url</th>
+          <th>likes</th>
+          <th>user</th>
+          <th>actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let blog of blogService.blogs">
+          <td>
+            {{ blog.title }}
+          </td>
+          <td>
+            {{ blog.author }}
+          </td>
+          <td>
+            {{ blog.url }}
+          </td>
+          <td>
+            {{ blog.likes }}
+          </td>
+          <td>
+            {{ blog.user.name }}
+          </td>
+          <td>
+            <button class="btn btn-secondary btn-sm">
+              <i class="material-icons">edit</i>
+            </button>
+            <button class="btn btn-danger btn-sm">
+              <i class="material-icons">delete</i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

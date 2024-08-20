@@ -3,31 +3,38 @@
     <div class="card">
       <div class="card-body">
         <h1>Formulario</h1>
-        <form class="form" #blogForm="ngForm">
+        <form class="form" #blogForm="ngForm" (ngSubmit)="addBlog(blogForm)">
+          <input type="hidden" name="id" [(ngModel)]="blogService.blogToCreate.id">
           <div class="form-group mb-3">
             <input
               type="text"
               class="form-control"
+              name="title"
               placeholder="Enter the title of blog"
+              [(ngModel)]="blogService.blogToCreate.title"
             />
           </div>
           <div class="form-group mb-3">
             <input
               type="text"
               class="form-control"
+              name="author"
               placeholder="Enter the author of blog"
+              [(ngModel)]="blogService.blogToCreate.author"
             />
           </div>
           <div class="form-group mb-3">
             <input
               type="text"
               class="form-control"
+              name="url"
               placeholder="Enter the url of blog"
+              [(ngModel)]="blogService.blogToCreate.url"
             />
           </div>
           <div>
             <button class="btn btn-primary">save</button>
-            <button class="btn btn-secondary">clean</button>
+            <button class="btn btn-secondary" (click)="resetForm(blogForm)" type="button">clean</button>
           </div>
         </form>
       </div>
@@ -63,10 +70,10 @@
             {{ blog.user.name }}
           </td>
           <td>
-            <button class="btn btn-secondary btn-sm">
+            <button class="btn btn-secondary btn-sm" (click)="editBlog(blog)">
               <i class="material-icons">edit</i>
             </button>
-            <button class="btn btn-danger btn-sm">
+            <button class="btn btn-danger btn-sm " (click)="deleteBlog(blog.id)">
               <i class="material-icons">delete</i>
             </button>
           </td>

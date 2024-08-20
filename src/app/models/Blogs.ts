@@ -3,5 +3,6 @@ export interface BlogInterface {
   author: String;
   url: String;
   likes: number;
-  user: any;
+  user?: any;
+  id?: string;
 }

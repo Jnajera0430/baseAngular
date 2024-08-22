@@ -28,15 +28,17 @@ export class BlogsComponent {
   }
 
   addBlog(form: NgForm) {
+    console.log({ value: form.value });
+
     if (form.value.id) {
       console.log('actualizando');
       const result = confirm('are you sure want to edit it?');
       if (result) {
-        this.blogService.updateBlog(form.value).subscribe(()=>{
+        this.blogService.updateBlog(form.value).subscribe(() => {
           try {
-            this.getBlogs();            
+            this.getBlogs();
           } catch (error) {
-            console.log({error});
+            console.log({ error });
           }
         });
       }
@@ -66,5 +68,19 @@ export class BlogsComponent {
 
   editBlog(blog: BlogInterface) {
     this.blogService.blogToCreate = blog;
+  }
+
+  addLike(blog: BlogInterface) {
+    const result = confirm('are you sure you want to like this blog?');
+    if (result) {
+      blog = { ...blog, likes: blog.likes + 1 };
+      this.blogService.updateBlog(blog).subscribe(() => {
+        try {
+          this.getBlogs();
+        } catch (error) {
+          console.log({ error });
+        }
+      });
+    }
   }
 }

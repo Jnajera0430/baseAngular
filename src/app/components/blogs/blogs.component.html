@@ -4,7 +4,11 @@
       <div class="card-body">
         <h1>Formulario</h1>
         <form class="form" #blogForm="ngForm" (ngSubmit)="addBlog(blogForm)">
-          <input type="hidden" name="id" [(ngModel)]="blogService.blogToCreate.id">
+          <input
+            type="hidden"
+            name="id"
+            [(ngModel)]="blogService.blogToCreate.id"
+          />
           <div class="form-group mb-3">
             <input
               type="text"
@@ -32,16 +36,76 @@
               [(ngModel)]="blogService.blogToCreate.url"
             />
           </div>
+          <div class="form-group mb-3">
+            <input
+              type="hidden"
+              class="form-control"
+              name="likes"
+              placeholder="Enter the url of blog"
+              [(ngModel)]="blogService.blogToCreate.likes"
+            />
+          </div>
           <div>
             <button class="btn btn-primary">save</button>
-            <button class="btn btn-secondary" (click)="resetForm(blogForm)" type="button">clean</button>
+            <button
+              class="btn btn-secondary"
+              (click)="resetForm(blogForm)"
+              type="button"
+            >
+              clean
+            </button>
           </div>
         </form>
       </div>
     </div>
   </div>
   <div class="col-md-9">
-    <table class="table table-striped">
+    <div *ngFor="let blog of blogService.blogs" class="mb-3">
+      <div class="card w-75">
+        <div class="card-body">
+          <h5 class="card-title">{{ blog.title }}</h5>
+          <p class="card-text">
+            {{ blog.author }}
+          </p>
+          <div style="display: flex; gap: 5px; align-items: center">
+            <div>
+              <b>likes:</b>
+              {{ blog.likes }}
+            </div>
+            <div>
+              <button class="btn btn-secondary btn-sm" (click)="addLike(blog)">
+                <i class="material-icons">thumb_up</i>
+              </button>
+            </div>
+          </div>
+          <p>
+            <b>url:</b>
+            <a
+              href="{{ blog.url }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              >{{ blog.url }}</a
+            >
+          </p>
+          <div
+            style="
+              display: flex;
+              width: 100%;
+              justify-content: flex-end;
+              gap: 5px;
+            "
+          >
+            <button class="btn btn-secondary btn-sm" (click)="editBlog(blog)">
+              <i class="material-icons">edit</i>
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="deleteBlog(blog.id)">
+              <i class="material-icons">delete</i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <table class="table table-striped">
       <thead>
         <tr>
           <th>title</th>
@@ -73,12 +137,12 @@
             <button class="btn btn-secondary btn-sm" (click)="editBlog(blog)">
               <i class="material-icons">edit</i>
             </button>
-            <button class="btn btn-danger btn-sm " (click)="deleteBlog(blog.id)">
+            <button class="btn btn-danger btn-sm" (click)="deleteBlog(blog.id)">
               <i class="material-icons">delete</i>
             </button>
           </td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </div>

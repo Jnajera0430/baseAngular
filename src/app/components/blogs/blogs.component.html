@@ -7,7 +7,7 @@
           <input
             type="hidden"
             name="id"
-            [(ngModel)]="blogService.blogToCreate.id"
+            [(ngModel)]="_blogService.blogToCreate.id"
           />
           <div class="form-group mb-3">
             <input
@@ -15,7 +15,7 @@
               class="form-control"
               name="title"
               placeholder="Enter the title of blog"
-              [(ngModel)]="blogService.blogToCreate.title"
+              [(ngModel)]="_blogService.blogToCreate.title"
             />
           </div>
           <div class="form-group mb-3">
@@ -24,7 +24,7 @@
               class="form-control"
               name="author"
               placeholder="Enter the author of blog"
-              [(ngModel)]="blogService.blogToCreate.author"
+              [(ngModel)]="_blogService.blogToCreate.author"
             />
           </div>
           <div class="form-group mb-3">
@@ -33,7 +33,7 @@
               class="form-control"
               name="url"
               placeholder="Enter the url of blog"
-              [(ngModel)]="blogService.blogToCreate.url"
+              [(ngModel)]="_blogService.blogToCreate.url"
             />
           </div>
           <div class="form-group mb-3">
@@ -42,7 +42,7 @@
               class="form-control"
               name="likes"
               placeholder="Enter the url of blog"
-              [(ngModel)]="blogService.blogToCreate.likes"
+              [(ngModel)]="_blogService.blogToCreate.likes"
             />
           </div>
           <div>
@@ -60,7 +60,7 @@
     </div>
   </div>
   <div class="col-md-9">
-    <div *ngFor="let blog of blogService.blogs" class="mb-3">
+    <div *ngFor="let blog of Blogs" class="mb-3">
       <div class="card w-75">
         <div class="card-body">
           <h5 class="card-title">{{ blog.title }}</h5>
@@ -117,7 +117,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let blog of blogService.blogs">
+        <tr *ngFor="let blog of _blogService.blogs">
           <td>
             {{ blog.title }}
           </td>

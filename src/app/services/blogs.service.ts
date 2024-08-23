@@ -1,50 +1,55 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BlogInterface } from '../models/Blogs';
+import { IBlog } from '../interfaces/iblog';
+import { HttpServiceService } from './http-service.service';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class BlogsService {
-  private readonly URL_API = 'http://localhost:8000/api';
-  private readonly token =
-    'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAvYXBpL2xvZ2luIiwiaWF0IjoxNzI0MzYwMTc2LCJleHAiOjE3MjQzNjM3NzYsIm5iZiI6MTcyNDM2MDE3NiwianRpIjoiQ0daZENVejBSNkJUODlyOSIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.qs77uJuSwN2CYCukeyrDBMk_HOIdqHUOtbEgYEC3fe0';
-  constructor(private readonly http: HttpClient) {}
-  public blogs: BlogInterface[] = [];
-  public blogToCreate: BlogInterface = {
+  public Blogs$: BehaviorSubject<IBlog[]> = new BehaviorSubject([] as IBlog[]);
+  public blogToCreate: IBlog = {
     title: '',
     author: '',
     url: '',
     likes: 0,
   };
+
+  constructor(private readonly _httpService: HttpServiceService) {
+    this.getBlogs();
+  }
+
   public getBlogs() {
-    return this.http.get<BlogInterface[]>(`${this.URL_API}/blogs`, {
-      headers: {
-        Authorization: this.token,
+    this._httpService.Get<IBlog[]>('blogs').subscribe({
+      next: (res) => {
+        this.SetBlogs(res);
       },
     });
   }
 
-  public createBlog(newBlog: BlogInterface) {
-    return this.http.post(`${this.URL_API}/blogs`, newBlog, {
-      headers: {
-        Authorization: this.token,
-      },
-    });
+  public createBlog(newBlog: IBlog) {
+    return this._httpService.Post<IBlog>('blogs', newBlog);
   }
 
   public deleteBlog(id: string) {
-    return this.http.delete(`${this.URL_API}/blogs/${id}`, {
-      headers: {
-        Authorization: this.token,
+    return this._httpService.Delete(`blogs/${id}`);
+  }
+
+  public UpdateBlog(blog: IBlog) {
+    this._httpService.Put<IBlog>(`blogs/${blog.id}`, blog).subscribe({
+      next: (res) => {
+        const blogs = this.Blogs$.getValue();
+        const blogsUpdated = blogs.map((blog) => {
+          if (res.id === blog.id) {
+            return res;
+          }
+          return blog;
+        });
+        this.SetBlogs(blogsUpdated);
       },
     });
   }
 
-  public updateBlog(blog: BlogInterface) {
-    return this.http.put(`${this.URL_API}/blogs/${blog.id}`, blog, {
-      headers: {
-        Authorization: this.token,
-      },
-    });
+  SetBlogs(blogs: IBlog[]) {
+    this.Blogs$.next(blogs);
   }
 }

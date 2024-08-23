@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { BlogsService } from '../../services/blogs.service';
 import { NgFor } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { BlogInterface } from '../../models/Blogs';
+import { IBlog } from '../../interfaces/iblog';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-blogs',
   standalone: true,
@@ -11,54 +12,52 @@ import { BlogInterface } from '../../models/Blogs';
   styleUrl: './blogs.component.css',
 })
 export class BlogsComponent {
-  constructor(public readonly blogService: BlogsService) {}
+  public Blogs: IBlog[] = [];
+  private _subscriptions: Subscription = new Subscription();
+  constructor(public _blogService: BlogsService) {}
 
   ngOnInit() {
-    this.getBlogs();
+    this._subscriptions.add(
+      this._blogService.Blogs$.subscribe({
+        next: (res) => {
+          this.Blogs = res;
+        },
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this._subscriptions.unsubscribe();
   }
 
   resetForm(form: NgForm) {
     form.reset();
   }
 
-  getBlogs() {
-    this.blogService.getBlogs().subscribe((data) => {
-      this.blogService.blogs = data;
-    });
-  }
-
   addBlog(form: NgForm) {
-    console.log({ value: form.value });
-
     if (form.value.id) {
       console.log('actualizando');
       const result = confirm('are you sure want to edit it?');
       if (result) {
-        this.blogService.updateBlog(form.value).subscribe(() => {
+        this._blogService.UpdateBlog(form.value);
+      } else {
+        this._blogService.createBlog(form.value).subscribe(() => {
           try {
-            this.getBlogs();
+            // this.getBlogs();
           } catch (error) {
             console.log({ error });
           }
         });
       }
-    } else {
-      this.blogService.createBlog(form.value).subscribe(() => {
-        try {
-          this.getBlogs();
-        } catch (error) {
-          console.log({ error });
-        }
-      });
     }
   }
 
   deleteBlog(id: string | undefined) {
     const result = confirm('are you sure want to delete it?');
     if (result && id) {
-      this.blogService.deleteBlog(id).subscribe(() => {
+      this._blogService.deleteBlog(id).subscribe(() => {
         try {
-          this.getBlogs();
+          // this.getBlogs();
         } catch (error) {
           console.log({ error });
         }
@@ -66,21 +65,15 @@ export class BlogsComponent {
     }
   }
 
-  editBlog(blog: BlogInterface) {
-    this.blogService.blogToCreate = blog;
+  editBlog(blog: IBlog) {
+    this._blogService.blogToCreate = blog;
   }
 
-  addLike(blog: BlogInterface) {
+  addLike(blog: IBlog) {
     const result = confirm('are you sure you want to like this blog?');
     if (result) {
       blog = { ...blog, likes: blog.likes + 1 };
-      this.blogService.updateBlog(blog).subscribe(() => {
-        try {
-          this.getBlogs();
-        } catch (error) {
-          console.log({ error });
-        }
-      });
+      this._blogService.UpdateBlog(blog);
     }
   }
 }

@@ -1,4 +1,4 @@
-export interface BlogInterface {
+export interface IBlog {
   title: String;
   author: String;
   url: String;

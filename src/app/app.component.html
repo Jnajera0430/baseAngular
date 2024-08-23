@@ -2,8 +2,14 @@
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Navbar</a>
   </div>
+  <input type="checkbox" [(ngModel)]="switch">
 </nav>
-
 <div class="container p-2">
-  <app-blogs></app-blogs>
+  <ng-container *ngIf="switch; else elseTemplate">
+    <app-blogs></app-blogs>
+  </ng-container>
+  <ng-template #elseTemplate>
+    <h1>login</h1>
+  </ng-template>
+  
 </div>

@@ -30,46 +30,34 @@ export class BlogsComponent {
     this._subscriptions.unsubscribe();
   }
 
-  resetForm(form: NgForm) {
+  public ResetForm(form: NgForm) {
     form.reset();
   }
 
-  addBlog(form: NgForm) {
+  public AddBlog(form: NgForm) {
     if (form.value.id) {
-      console.log('actualizando');
       const result = confirm('are you sure want to edit it?');
       if (result) {
         this._blogService.UpdateBlog(form.value);
-      } else {
-        this._blogService.createBlog(form.value).subscribe(() => {
-          try {
-            // this.getBlogs();
-          } catch (error) {
-            console.log({ error });
-          }
-        });
       }
+    } else {
+      const { id, ...blogToCreate } = form.value;
+      this._blogService.CreateBlog(blogToCreate);
     }
   }
 
-  deleteBlog(id: string | undefined) {
+  public DeleteBlog(id: string | undefined) {
     const result = confirm('are you sure want to delete it?');
     if (result && id) {
-      this._blogService.deleteBlog(id).subscribe(() => {
-        try {
-          // this.getBlogs();
-        } catch (error) {
-          console.log({ error });
-        }
-      });
+      this._blogService.DeleteBlog(id);
     }
   }
 
-  editBlog(blog: IBlog) {
+  public EditBlog(blog: IBlog) {
     this._blogService.blogToCreate = blog;
   }
 
-  addLike(blog: IBlog) {
+  public AddLike(blog: IBlog) {
     const result = confirm('are you sure you want to like this blog?');
     if (result) {
       blog = { ...blog, likes: blog.likes + 1 };

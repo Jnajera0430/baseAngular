@@ -15,10 +15,10 @@ export class BlogsService {
   };
 
   constructor(private readonly _httpService: HttpServiceService) {
-    this.getBlogs();
+    this.GetBlogs();
   }
 
-  public getBlogs() {
+  public GetBlogs() {
     this._httpService.Get<IBlog[]>('blogs').subscribe({
       next: (res) => {
         this.SetBlogs(res);
@@ -26,12 +26,22 @@ export class BlogsService {
     });
   }
 
-  public createBlog(newBlog: IBlog) {
-    return this._httpService.Post<IBlog>('blogs', newBlog);
+  public CreateBlog(newBlog: IBlog) {
+    return this._httpService.Post<IBlog, IBlog>('blogs', newBlog).subscribe({
+      next: (res) => {
+        this.GetBlogs();
+      },
+    });
   }
 
-  public deleteBlog(id: string) {
-    return this._httpService.Delete(`blogs/${id}`);
+  public DeleteBlog(id: string) {
+    return this._httpService.Delete(`blogs/${id}`).subscribe({
+      next: () => {
+        const blogs = this.Blogs$.getValue();
+        const blogsUpdated = blogs.filter((blog) => blog.id !== id);
+        this.SetBlogs(blogsUpdated);
+      },
+    });
   }
 
   public UpdateBlog(blog: IBlog) {
